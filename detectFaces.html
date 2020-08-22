@@ -1,8 +1,23 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="utf-8">
         <title>Detect Faces Sample</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <style type="text/css">
+            #container{
+                margin: 0px auto;
+                width:500px;
+                height: 375px;
+                border: 10px #333 solid;
+            }
+            #videoElement{
+                width:500px;
+                height:375px;
+                background-color:#666;
+            }
+        
+        </style>
     </head>
     <body>
         <script type="text/javascript">
@@ -59,6 +74,12 @@
                 });
             };
         </script>
+
+        <div id="container">
+            <video autoplay="true" id = "videoElement">
+            </video>
+        </div>
+
         <h1>Detect Faces:</h1>
         Enter the URL to an image that includes a face or faces, then click
         the <strong>Analyze face</strong> button.<br><br>
@@ -76,5 +97,26 @@
                 <img id="sourceImage" width="400" />
             </div>
         </div>
+
+        <script type="text/javascript">
+            var video = document.querySelector("#videoElement");
+            navigator.getUserMedia=navigator.getUserMedia||navigator.
+                webkitGetUsermedia||navigator.mozGetUserMedia||navigator.
+                msGetUserMedia||navigator.oGetUserMedia;
+            if (navigator.getUserMedia){
+                navigator.getUserMedia({video:true}, handleVideo, videoError); 
+            }
+
+            function handleVideo(stream){
+                video.srcObject = stream;
+                video.play();
+            //    
+            
+            }
+
+            function videoError(e){
+            }
+
+        </script>
     </body>
 </html>
