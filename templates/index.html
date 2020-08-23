@@ -1,27 +1,102 @@
 <html>
 
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@900&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="stylesheet.css">
     <style>
       img {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        width: 35%
+        width: 35%;
+        border-radius:10px;
+        overflow:hidden;
       }
 
-    h1{
-        text-align: center;
+      h1{
+          text-align: center;
+          font-family: 'Source Sans Pro';
+          font-size: 60px; 
+          color: white;  
+      }
+
+      body {
+        background: -moz-linear-gradient(45deg, rgba(213, 15, 61, 0.6), rgba(13, 17, 198, 0.69) 100%);
+        background: -webkit-linear-gradient(45deg, rgba(213, 15, 61, 0.6), rgba(13, 17, 198, 0.69) 100%);
+        background: linear-gradient(to 45deg, rgba(213, 15, 61, 0.6), rgba(13, 17, 198, 0.69) 100%);
+      }
+
+      #index{
+        border-radius: 8px;
+        align-content: center;
         font-family: 'Source Sans Pro';
-        font-size: 40px;
-    }
+        font-size: 20px;
+        background-color: transparent;
+      }
+
+      #index:hover{
+        background-color: white; /* Green */
+        color:transparent;
+      }
+
+      .wrapper{
+        text-align: center;
+        padding: 15px;
+      }
+
+      .btngraph {
+        border: 2px solid black;
+        background-color:transparent;
+        color: black;
+        padding: 14px 28px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius:5px;
+        font-family: 'Source Sans Pro';
+        text-align: center;
+
+        border-color: white;
+        color: white;
+
+      }
+
+      .btngraph:hover {
+        background-color: gray;
+        color: white;
+      }
+
+
     </style>
     <title>CLAAS</title>
   </head>
 
+  <!--<body style = "background-color:#006400">-->
   <body>
     <h1>CLAAS Video Feed</h1>
     <img id="bg" src="{{ url_for('video_feed') }}">
+
+  
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type=text/javascript>
+        $(function() {
+          $('a#test').bind('click', function() {
+            $.getJSON('/background_process_test',
+                function(data) {
+              //do nothing
+            });
+            return false;
+          });
+        });
+    </script>
+
+    <div class="wrapper">
+      <form action="/graph">
+        <button class="btngraph" onclick="graph.html">See Attentiveness Results</button>
+      </form>
+      
+    </div>
+  
+
   <!--  <form action="/graph" method="POST">
       <input type="text" name="name">
     </form>
