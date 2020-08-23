@@ -4,7 +4,7 @@ import cv2
 
 from flask import Flask, render_template, Response, request
 from vidstreaming import VideoCamera
-
+from vidstreaming import data
 from time import sleep
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ def video_feed():
 
 @app.route('/graph', methods = ["POST", "GET"])
 def graph():
-    global photos
+    
     if request.method == "POST":
         # file = request.files["file"]
         # run processing script on file, append data to photos

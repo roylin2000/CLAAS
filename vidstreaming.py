@@ -15,6 +15,8 @@ ds_factor=0.6
 
 images = []
 
+data = []
+
 
 class VideoCamera(object):
     def __init__(self):
@@ -46,13 +48,11 @@ class VideoCamera(object):
 
         ###self.out.write(image)
         
-        print('wow')
-        getData(image)
-        print('cool')
+        
 
-        self.out.release();
-        self.video.release()
-        cv2.destroyAllWindows()
+        
+
+        
 
         if self.count == 50:
             self.out.release();
@@ -69,27 +69,23 @@ class VideoCamera(object):
         #tempFrame = cv2.imread('video', tempImage)
         #tempImages.append(tempFrame)
 
-        gray=cv2.cvtColor(tempImage,cv2.COLOR_BGR2GRAY)
+        gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
         face_rects=haar_cascade_face.detectMultiScale(gray,1.3,5)
         for (x,y,w,h) in face_rects:
-            cv2.rectangle(tempImage,(x,y),(x+w,y+h),(0,255,0),2)
+            cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),2)
             break
-        ret, jpeg = cv2.imencode('.jpg', tempImage)
+        ret, jpeg = cv2.imencode('.jpg', image)
 
         print(self.count)
         self.count = self.count+1
-            
+
+        if self.count % 30 == 0:
+            data.append(getData(image))
+
+
         return jpeg.tobytes()
 
-    def loadFrames(self):
-        cap = cv2.VideoCapture("video.mp4")
-        totalFrames = cap.get(7)
-        
 
-       
-
-
-        return
 
 
 
