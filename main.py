@@ -43,10 +43,24 @@ def graph():
         return "", 204
     photosList = photos
     photos = []
-
-
-    
     return render_template("graph.html", photos = photosList)
+
+def sum(lean, headpos, blink):
+    '''
+    lean: boolean arrays -> 5s intervals
+    headpos: boolean arrays -> 10s intervals
+    blink: 0, 0.5, 1 array -> 20s intervals
+    output: Individual Average Attention Score array
+    '''
+    lean_weight = 0.3
+    headpos_weight = 0.3
+    blink_weight = 0.4
+    result = [] # should be the same size as lean
+
+    for i in range(len(lean)):
+        result.append(lean[i]*lean_weight + headpos[i // 5]*headpos_weight + blink[i // 10]*blink_weight)
+
+    return result
 
 if __name__ == '__main__':
     # defining server ip address and port
