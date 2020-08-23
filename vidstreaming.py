@@ -54,7 +54,7 @@ class VideoCamera(object):
 
         
 
-        if self.count == 200:
+        if self.count == 300:
             self.out.release();
             self.video.release()
             cv2.destroyAllWindows()
