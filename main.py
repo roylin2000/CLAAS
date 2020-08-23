@@ -15,10 +15,13 @@ photos = []
 def index():
     # rendering webpage
     return render_template('index.html')
+
+
 def gen(camera):
     while True:
         #get camera frame
         frame = camera.get_frame()
+
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -41,7 +44,6 @@ def graph():
     photos = []
 
 
-    
     return render_template("graph.html", photos = photosList)
 
 if __name__ == '__main__':
