@@ -151,6 +151,42 @@ class multipleFrames:
 
         return result
 
+    def if_focus_blink(self):
+        x = 0
+        EYE_THRESH = 0.3 #0.3 is optimal setting (30fps)
+        EYE_CONSEC_FRAME = 2 #3 is optimal setting (30 fps)
+        counter = 0
+
+        while x < len(self.l):
+            if self.l[x].get_earAvg() < EYE_THRESH:
+                counter += 1
+            else:
+                if counter >= EYE_CONSEC_FRAME:
+                    self.l[x].set_blink(1) #Mark the frame that a blink is completed
+                    counter = 0
+            x += 1
+
+        times = len(self.l) // 20 #number of frames to go through to match 20 second period with 1fps (to convert back to 30 fps, change 30 to 900)
+
+        eyeResult = []
+        for w in range(times):
+            count = 0
+            y = 0
+            while (y+20*x) < (20+20*x):
+                count = count + self.l[y+20*x].ifBlink()
+                y+=1
+            if count*3 <= 9:
+                attention =1
+                eyeResult.append(1)
+            if (count*3 > 10) and (count*3 <=21):
+                attention =0.5
+                eyeResult.append(0.5)
+            if count*3 > 21:
+                attention =0 
+                eyeResult.append(0)
+
+        return eyeResult
+
 
 
 
