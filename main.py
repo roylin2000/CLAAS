@@ -9,7 +9,7 @@ from time import sleep
 
 #For the processing of data and eventual attention results
 import numpy as np
-from FrameDataObject import frameObject
+from FrameDataObject import frameObject, multipleFrames
 
 app = Flask(__name__)
 

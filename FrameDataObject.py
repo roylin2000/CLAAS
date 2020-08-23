@@ -168,6 +168,8 @@ class multipleFrames:
 
         times = len(self.l) // 20 #number of frames to go through to match 20 second period with 1fps (to convert back to 30 fps, change 30 to 900)
 
+       # mean_data = np.array(mean_data)
+
         eyeResult = []
         for w in range(times):
             count = 0
