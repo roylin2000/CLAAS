@@ -3,7 +3,8 @@ import numpy as np
 
 class frameObject:
 
-    def __init__(self, EyeLTopX, EyeLTopY, EyeLBotX, EyeLBotY, EyeLOutX, EyeLOutY, EyeLInX, EyeLInY, EyeRTopX, EyeRTopY, EyeRBotX, EyeRBotY, EyeROutX, EyeROutY, EyeRInX, EyeRInY):
+    def __init__(self, EyeLTopX, EyeLTopY, EyeLBotX, EyeLBotY, EyeLOutX, EyeLOutY, EyeLInX, EyeLInY, EyeRTopX, EyeRTopY, 
+                 EyeRBotX, EyeRBotY, EyeROutX, EyeROutY, EyeRInX, EyeRInY, height, width, yaw, pitch):
         self.eyeLTopX = EyeLTopX
         self.eyeLTopY = EyeLTopY
         self.eyeLBotX = EyeLBotX
@@ -22,33 +23,18 @@ class frameObject:
         self.eyeRInX = EyeRInX
         self.eyeRInY = EyeRInY
 
+        self.height = height
+        self.width = width # in pixels
+        self.yaw = yaw # left and right head movement, +ve left, -ve right
+        self.pitch = pitch # up and down, +ve up, -ve down
+
         self.ifBlink = 0
 
     #Setter to set the status of if a blink was detected or not
     def set_blink(self, value):
         self.ifBlink = value
     
-    #Left eye setters NOT NECCESARY WILL DELETE LATER
-    def set_eyeLTopX(self, value):
-        self.eyeLTopX = value
-    def set_eyeLTopY(self, value):
-        self.eyeLTopY = value
-
-    def set_eyeLBotX(self, value):
-        self.eyeLBotX = value
-    def set_eyeLBotY(self, value):
-        self.eyeLBotY = value
-
-    def set_eyeLOutX(self, value):
-        self.eyeLOutX = value
-    def set_eyeLOutY(self, value):
-        self.eyeLOutY = value
-
-    def set_eyeLInX(self, value):
-        self.eyeLInX = value
-    def set_eyeLInY(self, value):
-        self.eyeLInY = value
-
+    
     #Return the EAR value of the Left eye
     def get_earL(self): 
         eyeLTop = np.array([self.eyeLTopX, self.eyeLTopY])
@@ -76,6 +62,96 @@ class frameObject:
         earL = self.get_earL()
         earR = self.get_earR()
         return (earL+earR)/2
+
+
+
+    #Body/Face Methods
+    def get_area(self):
+        return self.height * self.width
+
+    def if_tilt_LR(self, threshold):
+        '''
+        determine if head is tilted towards left or right, returns True if the head is tilted
+        threshold = degree to determine tilt
+        '''
+        return abs(self.yaw) > threshold
+
+    def if_tilt_UD(self, threshold):
+        '''
+        determine if head is tilted towards up or down, returns True if the head is tilted
+        threshold = degree to determine tilt
+        '''
+        return abs(self.pitch) > threshold
+
+
+class multipleFrames:
+    def __init__(self, l, frameR):
+        self.l = l # list of Face API objects
+        self.frameR = frameR # frame rate
+
+    def if_lean(self, interval):
+        '''
+        interval = list of frameObjects in an interval of 5s, len = frameR * 5
+        leaning forward iff face area is becoming bigger
+        :return: True if leaning forward for more than 4s worth of frames within each 5s period (80%)
+                False otherwise
+        '''
+        dL = [x.get_area() - interval[i - 1].get_area() for i, x in enumerate(interval)][1:] # difference list
+        pos = [n for n in dL if n >= 0]
+        pos_count = len(pos) # number of frames head is becoming bigger -> leaning forward -> focused
+
+        return pos_count >= len(interval) * 0.8 # True (focused) if in more than 80% of the frames, head size increases
+
+    def if_headpos(self, interval):
+        '''
+        interval = list of frameObjects in an interval of 10s, len = frameR * 10
+        head is not oriented towards the screen if more than 60% of frames (6s) yaw or pitch is over threshold
+        :return: True if head is oriented towards the screen -> focused
+                False otherwise -> unfocused
+        '''
+        over_yaw = [n for n in interval if n.if_tilt_LR]
+        over_pitch = [n for n in interval if n.if_tilt_UD]
+        return len(over_yaw) <= 0.6 * len(interval) or len(over_pitch) <= 0.6 * len(interval)
+
+    def if_focus_lean(self):
+        '''
+        divide l into 5s intervals and output attention classification based on lean
+        '''
+        size = 5 * frameR
+        result = [] # result list containing 1 -> focused; 0 -> unfocused
+
+        if len(self.l) // size == len(self.l) / size:
+            for i in range(len(self.l) // size):
+                result.append(self.if_lean(self.l[size * i: size * i + size]))
+        else:
+            for i in range(len(self.l) // size + 1):
+                if i <= len(self.l) // size:
+                    result.append(self.if_lean(self.l[size * i: size * i + size]))
+                else:
+                    result.append(self.if_lean(self.l[size * i:len(self.l)]))
+
+        return result
+
+    def if_focus_headpos(self):
+        '''
+        divide l into 10s intervals and output attention classification based on headPose
+        '''
+        size = 10 * frameR
+        result = []  # result list containing 1 -> focused; 0 -> unfocused
+
+        if len(self.l) // size == len(self.l) / size:
+            for i in range(len(self.l) // size):
+                result.append(self.if_headpos(self.l[size * i: size * i + size]))
+        else:
+            for i in range(len(self.l) // size + 1):
+                if i <= len(self.l) // size:
+                    result.append(self.if_headpos(self.l[size * i: size * i + size]))
+                else:
+                    result.append(self.if_headpos(self.l[size * i:len(self.l)]))
+
+        return result
+
+
 
 
 #Testing
