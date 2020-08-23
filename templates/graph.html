@@ -1,8 +1,38 @@
 <html>
   <head>
+    <meta charset="utf-8">
     <title>TEST</title>
+    <script src="static/chart.min.js"></script>
   </head>
   <body>
     <h1>{{ photos }}</h1>
+    <canvas id = "chart" width="600" height="400"></canvas>
+    <script>
+      
+      Chart.defaults.global.responsive = false;
+
+      var chartData = {
+        labels: ["0s","5s","10s","15s","20s","25s"],
+        datasets: [{
+          label: "Attnetiveness for student 2",
+          fillColor: "rgba(151,187,205,0.2)",
+          strokeColor: "rgba(151,187,205,1)",
+          pointColor: "rgba(151,187,205,1)",
+          pointStrokeColor: "#fff",
+          pointHighlightFill: "#fff",
+          pointHighlightStroke: "rgba(151,187,205,1)",
+          data: [128, 148, 140, 119, 186, 127, 190]
+      }
+    ]
+  }
+
+      var ctx = new Chart(document.getElementById("chart").getContext("2d")).Line(chartData);
+    
+    </script>
+    
+    <p id = "caption">This is the chart displaying attentiveness levels of the students</p>
+
   </body>
 </html>
+
+<!-- datasets under script is typically where you put your array of objects-->

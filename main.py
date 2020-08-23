@@ -2,7 +2,10 @@
 # import the necessary packages
 import cv2
 
-from flask import Flask, render_template, Response, request
+from flask import Flask, render_template, Response, request, jsonify
+
+from random import sample
+
 from vidstreaming import VideoCamera
 
 from time import sleep
@@ -29,19 +32,19 @@ def video_feed():
 
 @app.route('/graph', methods = ["POST", "GET"])
 def graph():
+
     global photos
     if request.method == "POST":
         # file = request.files["file"]
         # run processing script on file, append data to photos
-
-        
         photos.append(request.form["name"]) 
         return "", 204
     photosList = photos
-    photos = []
+    photos = [] 
+    #put photo data (collected from API) in this array --> this array is full of photo objects
+    #then use get methods on the object to extract data, use algorithm to determine attentiveness % for that one frame
+    #input this as a data point
 
-
-    
     return render_template("graph.html", photos = photosList)
 
 if __name__ == '__main__':
