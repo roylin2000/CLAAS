@@ -17,7 +17,7 @@ headers = {'Content-Type': 'application/octet-stream',
 params = {
     'returnFaceId': True,
     'returnFaceLandmarks': True,
-    'returnFaceAttributions': 'headPose, smile, emotion'
+    'returnFaceAttributes': 'age,gender,headPose,smile,facialHair,glasses,emotion'
 }
 
 def getData(np):
