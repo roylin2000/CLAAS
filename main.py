@@ -7,6 +7,9 @@ from vidstreaming import VideoCamera
 
 from time import sleep
 
+import numpy as np
+from FrameDataObject import frameObject
+
 app = Flask(__name__)
 
 photos = []

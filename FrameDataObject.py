@@ -22,6 +22,11 @@ class frameObject:
         self.eyeRInX = EyeRInX
         self.eyeRInY = EyeRInY
 
+        self.ifBlink = 0
+
+    #Setter to set the status of if a blink was detected or not
+    def set_blink(self, value):
+        self.ifBlink = value
     
     #Left eye setters NOT NECCESARY WILL DELETE LATER
     def set_eyeLTopX(self, value):
@@ -73,18 +78,34 @@ class frameObject:
         return (earL+earR)/2
 
 
+#Testing
 
-Brian = frameObject( 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 160)
-print(Brian.eyeLTopY)
-print(Brian.eyeLInX)
-print(Brian.get_earL())
-print("Now for right test")
-print(Brian.eyeRInX)
-print(Brian.eyeRBotY)
-print(Brian.get_earR())
-print((Brian.get_earR()<0.8))
-print("average:")
-print(Brian.get_earAvg())
+#Brian = frameObject( 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 180, 160)
+#print(Brian.eyeLTopY)
+#print(Brian.eyeLInX)
+#print(Brian.get_earL())
+#print("Now for right test")
+#print(Brian.eyeRInX)
+#print(Brian.eyeRBotY)
+#print(Brian.get_earR())
+#print((Brian.get_earR()<0.8))
+#print("average:")
+#print(Brian.get_earAvg())
 
 
+
+##NOTES##
 #If no value is found for pixel data location --> default to 0 (MUST ADD ERROR CASES[TRY CATCH STATEMENTS, or perhaps a if statement when calculating the attentive lvl])
+#Go through the list of objects look at first set of 900 frames (or at least start at frame 1 end at frame 900) 
+#or first set of 600 frames
+#find number of intervals to run for? (or have a minimum submission length that must be met
+
+
+
+
+
+
+
+
+
+
